@@ -26,20 +26,26 @@ class KodikService
         return $base64Decoded;
     }
 
-    public function searchAnime($shikimoriId)
+    public function searchAnimeByShikimoriId($shikimoriId, $translationId)
     {
         try {
             $response = $this->httpClient->get("search?token=7ee795cd3e4f7078e7f5d430569d6559&shikimori_id=$shikimoriId");
             $data = json_decode($response->getBody(), true);
-            return $data;
+            // return $data;
         } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
         }
+        $collection = collect($data['results']);
+
+        if ($translationId !== null) {
+            $result = $collection->where('translation.id', $translationId);
+            return $result->first();
+        }
+        return $collection;
     }
 
-    public function getEpisodeUrl()
+    public function getEpisodeUrlByKodikUrl($base_url)
     {
-        $base_url = "//kodik.info/serial/45876/1982f6d94b38a0a11f3abdb275786044/720p";
         $client = new Client();
         $iframeResponse = $client->get("https:" . $base_url)->getBody();
         preg_match('/domain = "([^"]+)"/', $iframeResponse, $matchesDomain);

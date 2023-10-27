@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\KodikController;
+use App\Http\Controllers\ShikimoriController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('search/', [KodikController::class, 'search']);
-Route::get('episode/', [KodikController::class, 'episode']);
-
+Route::get('search/{shikimoriId}', [KodikController::class, 'search']);
+Route::post('episode/', [KodikController::class, 'episode']);
+Route::get('animes/', [ShikimoriController::class, 'getAnimes']);
